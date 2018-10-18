@@ -8,7 +8,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import java.awt.*;
 
-public class BasicGameApp implements Runnable, KeyListener,MouseListener {
+public class BasicGameApp implements Runnable, KeyListener, MouseListener {
 
 	final int WIDTH = 1000;
 	final int HEIGHT = 700;
@@ -21,7 +21,8 @@ public class BasicGameApp implements Runnable, KeyListener,MouseListener {
 	private int xpos = 300;
 	private int ypos = 300;
 	private boolean left, right, up, down;
-	private int x,y;
+	private int x, y;
+	private Grid grid = new Grid(7, 10);
 
 	public static void main(String[] args) {
 		BasicGameApp ex = new BasicGameApp();
@@ -69,13 +70,13 @@ public class BasicGameApp implements Runnable, KeyListener,MouseListener {
 
 			// move things
 			if (right)
-				xpos +=2;
+				xpos += 2;
 			if (left)
-				xpos-=2;
+				xpos -= 2;
 			if (up)
-				ypos-=2;
+				ypos -= 2;
 			if (down)
-				ypos+=2;
+				ypos += 2;
 
 			//sleep
 			try {
@@ -91,8 +92,15 @@ public class BasicGameApp implements Runnable, KeyListener,MouseListener {
 		Graphics2D g = (Graphics2D) bufferStrategy.getDrawGraphics();
 		g.clearRect(0, 0, WIDTH, HEIGHT);
 		// g.fillRect((int) x, 0, 200, 200);
-		g.drawImage(image, xpos, ypos, 100, 100, null);
-		g.fillRect(x,y,22,22);
+//		g.drawImage(image, xpos, ypos, 100, 100, null);
+//		g.fillRect(x,y,22,22);
+
+		for (int x = 0; x < WIDTH / 100; x++) {
+			for (int y = 0; y < HEIGHT / 100; y++) {
+				g.setColor(grid.tiles[y][x].color);
+				g.fillRect(x * 100, y * 100, 100, 100);
+			}
+		}
 
 		g.dispose();
 
@@ -105,21 +113,21 @@ public class BasicGameApp implements Runnable, KeyListener,MouseListener {
 		System.out.println("Key Pressed: " + key);
 
 		switch (key) {
-		case 'w':
-			up = true;
-			break;
+			case 'w':
+				up = true;
+				break;
 
-		case 's':
-			down = true;
-			break;
+			case 's':
+				down = true;
+				break;
 
-		case 'a':
-			left = true;
-			break;
+			case 'a':
+				left = true;
+				break;
 
-		case 'd':
-			right = true;
-			break;
+			case 'd':
+				right = true;
+				break;
 		}
 
 	}
@@ -129,21 +137,21 @@ public class BasicGameApp implements Runnable, KeyListener,MouseListener {
 		System.out.println("Key Pressed: " + key);
 
 		switch (key) {
-		case 'w':
-			up = false;
-			break;
+			case 'w':
+				up = false;
+				break;
 
-		case 's':
-			down = false;
-			break;
+			case 's':
+				down = false;
+				break;
 
-		case 'a':
-			left = false;
-			break;
+			case 'a':
+				left = false;
+				break;
 
-		case 'd':
-			right = false;
-			break;
+			case 'd':
+				right = false;
+				break;
 		}
 	}
 
@@ -167,8 +175,8 @@ public class BasicGameApp implements Runnable, KeyListener,MouseListener {
 	@Override
 	public void mouseReleased(MouseEvent e) {
 		System.out.println("test");
-		x=e.getX();
-		y=e.getY();
+		x = e.getX();
+		y = e.getY();
 	}
 
 	@Override
