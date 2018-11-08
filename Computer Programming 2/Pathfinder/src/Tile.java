@@ -6,7 +6,7 @@ class Tile {
 
     Tile() {
         this.resistance = Math.random();
-        int rgb = (int) (this.resistance * 100);
+        int rgb = (int) ((1 - this.resistance) * 255);
         this.color = new Color(rgb, rgb, rgb);
     }
 
