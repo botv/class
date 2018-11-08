@@ -7,14 +7,20 @@ import java.awt.image.BufferStrategy;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import java.awt.*;
+import java.util.ArrayList;
 
-public class Main implements Runnable, KeyListener, MouseListener {
+public class Main implements Runnable, MouseListener {
 
 	private final int WIDTH = 900;
 	private final int HEIGHT = 700;
 
 	private BufferStrategy bufferStrategy;
 	private Image image;
+
+	private boolean moving;
+
+	private String path = "";
+	private String direction = "";
 
 	private int xpos = 400;
 	private int ypos = 300;
@@ -40,7 +46,6 @@ public class Main implements Runnable, KeyListener, MouseListener {
 
 		panel.add(canvas);
 
-		canvas.addKeyListener(this);
 		canvas.addMouseListener(this);
 
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -63,11 +68,29 @@ public class Main implements Runnable, KeyListener, MouseListener {
 			// paint the graphics
 			render();
 
-			// move things
-			if (xpos != xdest && ypos % 100 == 0) {
-				xpos += Math.abs(xdest - xpos) / (xdest - xpos);
-			} else if (ypos != ydest && xpos % 100 == 0) {
-				ypos += Math.abs(ydest - ypos) / (ydest - ypos);
+			if (path.length() > 0 && ypos % 100 == 0 && xpos % 100 == 0) {
+				direction = path.substring(0, 1);
+				path = path.substring(1);
+			}
+
+			if (xpos == xdest && ypos == ydest) {
+				moving = false;
+				direction = "";
+			}
+
+			switch (direction) {
+				case "u":
+					ypos -= 1;
+					break;
+				case "d":
+					ypos += 1;
+					break;
+				case "l":
+					xpos -= 1;
+					break;
+				case "r":
+					xpos += 1;
+					break;
 			}
 
 			//sleep
@@ -95,43 +118,26 @@ public class Main implements Runnable, KeyListener, MouseListener {
 		bufferStrategy.show();
 	}
 
-	public void keyPressed(KeyEvent e) {
-
-	}
-
-	public void keyReleased(KeyEvent e) {
-
-	}
-
-	public void keyTyped(KeyEvent e) {
-		System.out.println("Key Typed: " + e.getKeyChar() + " "
-				+ InputEvent.getModifiersExText(e.getModifiersEx()) + "\n");
-	}
-
-	@Override
 	public void mouseClicked(MouseEvent e) {
-
 	}
 
-	@Override
 	public void mousePressed(MouseEvent e) {
-
 	}
 
-	@Override
-	public void mouseReleased(MouseEvent e) {
-		xdest = ((int) e.getX() / 100) * 100;
-		ydest = ((int) e.getY() / 100) * 100;
-		System.out.println("(" + xdest + ", " + ydest + ")");
-	}
-
-	@Override
 	public void mouseEntered(MouseEvent e) {
-
 	}
 
-	@Override
 	public void mouseExited(MouseEvent e) {
+	}
 
+	public void mouseReleased(MouseEvent e) {
+		if (!moving) {
+			moving = true;
+			xdest = (e.getX() / 100) * 100;
+			ydest = (e.getY() / 100) * 100;
+			Pathfinder pathfinder = new Pathfinder(grid, e.getY() / 100, e.getX() / 100);
+			ArrayList<String> paths = pathfinder.findAllPaths(ypos / 100, xpos / 100, "", new ArrayList<>());
+			path = pathfinder.findShortestPath(ypos / 100, xpos / 100);
+		}
 	}
 }
