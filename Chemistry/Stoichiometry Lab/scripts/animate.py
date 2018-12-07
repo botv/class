@@ -12,11 +12,12 @@ def init():
     ax.set_xlabel('$NaOH$ (mL)')
     ax.set_ylabel('$CaCl_2$ (mL)')
     ax.set_zlabel('pH')
+
     return fig,
 
 
 def animate(i):
-    ax.view_init(elev=10., azim=i)
+    ax.view_init(elev=10, azim=i)
     return fig,
 
 
@@ -32,5 +33,5 @@ if __name__ == '__main__':
     z2 = df.iloc[:, 3]
     z3 = df.iloc[:, 4]
 
-    anim = animation.FuncAnimation(fig, animate, init_func=init, frames=360, interval=30, blit=True)
-    anim.save('../results/animation.mp4', fps=60, extra_args=['-vcodec', 'libx264'])
+    anim = animation.FuncAnimation(fig, animate, init_func=init, frames=360, interval=20, blit=True)
+    anim.save('../results/animation.mp4', fps=30, extra_args=['-vcodec', 'libx264'])
