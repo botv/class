@@ -7,7 +7,7 @@ if __name__ == '__main__':
 	fig = plt.figure()
 
 	ax = fig.add_subplot(111, projection='3d')
-	df = pd.read_csv('./data/data.csv')
+	df = pd.read_csv('../data/data.csv')
 
 	x = df.iloc[:, 0]
 	y = df.iloc[:, 1]

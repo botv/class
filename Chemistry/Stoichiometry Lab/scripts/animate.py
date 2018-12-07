@@ -24,7 +24,7 @@ if __name__ == '__main__':
     fig = plt.figure()
     ax = Axes3D(fig)
 
-    df = pd.read_csv('./data/data.csv')
+    df = pd.read_csv('../data/data.csv')
 
     x = df.iloc[:, 0]
     y = df.iloc[:, 1]
@@ -33,4 +33,4 @@ if __name__ == '__main__':
     z3 = df.iloc[:, 4]
 
     anim = animation.FuncAnimation(fig, animate, init_func=init, frames=360, interval=30, blit=True)
-    anim.save('basic_animation.mp4', fps=60, extra_args=['-vcodec', 'libx264'])
+    anim.save('../results/animation.mp4', fps=60, extra_args=['-vcodec', 'libx264'])
