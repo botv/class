@@ -9,23 +9,8 @@ Acknowledgement: http://programarcadegames.com
 
 import pygame
 import numpy as np
-import player
-
-# Define some colors
-BLACK = (0, 0, 0)
-WHITE = (255, 255, 255)
-GREEN = (0, 255, 0)
-RED = (255, 0, 0)
-BLUE = (0, 0, 255)
-GRAY = (128, 128, 128)
-ORANGE = (255, 128, 0)
-
-# This sets the WIDTH and HEIGHT of each grid location
-WIDTH = 20
-HEIGHT = 20
-ROWS = 12
-COLUMNS = 12
-MARGIN = 2
+from player import *
+from constants import *
 
 
 def draw_board(board):
@@ -33,13 +18,15 @@ def draw_board(board):
 		for r in range(ROWS):
 			color = WHITE
 
-			if board[c] <= (ROWS - 1 -r):
+			if board[c] <= (ROWS - 1 - r):
 				color = GRAY
 
-			pygame.draw.rect(screen, color, [(MARGIN + WIDTH) * c + MARGIN, (MARGIN + HEIGHT) * r + MARGIN, WIDTH, HEIGHT])
+			pygame.draw.rect(screen, color,
+				[(MARGIN + WIDTH) * c + MARGIN, (MARGIN + HEIGHT) * r + MARGIN, WIDTH, HEIGHT])
 
 	color = ORANGE
-	pygame.draw.rect(screen, color, [(MARGIN + WIDTH) * 0 + MARGIN, (MARGIN + HEIGHT) * (ROWS - 1) + MARGIN, WIDTH, HEIGHT])
+	pygame.draw.rect(screen, color,
+		[(MARGIN + WIDTH) * 0 + MARGIN, (MARGIN + HEIGHT) * (ROWS - 1) + MARGIN, WIDTH, HEIGHT])
 
 	pygame.display.flip()
 
@@ -76,11 +63,16 @@ if __name__ == '__main__':
 	screen.fill(BLACK)
 
 	while not game_over:
+		player = Player()
+		paths = player.get_paths(board)
+		print(paths)
+
 		draw_board(board)
 		user_clicked = False
 		while not user_clicked:
 			for event in pygame.event.get():
 				if event.type == pygame.MOUSEBUTTONDOWN:
+					# Human player move
 					pos = pygame.mouse.get_pos()
 					column = pos[0] // (WIDTH + MARGIN)
 					row = pos[1] // (HEIGHT + MARGIN)
@@ -94,14 +86,20 @@ if __name__ == '__main__':
 								if board[c] > board[column]:
 									board[c] = board[column]
 
-							print(board)
+							if row == ROWS - 1 and column == 0:
+								game_over = True
 
-						if row == ROWS - 1 and column == 0:
-							game_over = True
+							# Computer player move
+							reductions = player.get_reductions(board)
+							print(reductions)
+							row, column = player.get_move(board)
+							board = player.move(board, row, column)
+
+							if row == ROWS - 1 and column == 0:
+								game_over = True
+
 					except IndexError:
 						pass
 
 	pygame.display.quit()
-
-	# Be IDLE friendly. If you forget this line, the program will 'hang' on exit.
 	pygame.quit()
