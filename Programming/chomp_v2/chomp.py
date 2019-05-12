@@ -134,7 +134,7 @@ def human_play(agent):
 
 
 def save_states(agent):
-	data = {k: v.tolist() for k, v in agent2.states.items()}
+	data = {k: v.tolist() for k, v in agent.states.items()}
 	FileHelper.save(data, 'data/states.json')
 
 
@@ -149,7 +149,7 @@ def main():
 	# epochs = 10000
 	# train(epochs, agent1, agent2)
 	# save_states(agent2)
-	
+
 	agent = ChompAgent()
 	agent.states = load_states()
 	agent.get_serious()
