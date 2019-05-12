@@ -8,9 +8,10 @@ Acknowledgement: http://programarcadegames.com
 """
 
 import pygame
-import numpy as np
-from player import *
-from constants import *
+
+from chomp import Chomp
+from smart_player import *
+from board import *
 
 
 def draw_board(board):
@@ -31,9 +32,9 @@ def draw_board(board):
 	pygame.display.flip()
 
 
-if __name__ == '__main__':
+def main():
 	# Initialize board full of cookies
-	board = np.full(COLUMNS, fill_value=ROWS, dtype=int)
+	board = Board(ROWS, COLUMNS)
 
 	# Initialize pygame
 	pygame.init()
@@ -63,11 +64,10 @@ if __name__ == '__main__':
 	screen.fill(BLACK)
 
 	while not game_over:
-		player = Player()
-		paths = player.get_paths(board)
-		print(paths)
+		player = SmartPlayer()
+		print(board.board)
 
-		draw_board(board)
+		draw_board(board.board)
 		user_clicked = False
 		while not user_clicked:
 			for event in pygame.event.get():
@@ -78,22 +78,20 @@ if __name__ == '__main__':
 					row = pos[1] // (HEIGHT + MARGIN)
 
 					try:
-						if board[column] > (ROWS - 2 - row):
+						if board.board[column] > (ROWS - 2 - row):
 							user_clicked = True
-							board[column] = (ROWS - 1 - row)
+							board.board[column] = (ROWS - 1 - row)
 
 							for c in range(column, COLUMNS):
-								if board[c] > board[column]:
-									board[c] = board[column]
+								if board.board[c] > board.board[column]:
+									board.board[c] = board.board[column]
 
 							if row == ROWS - 1 and column == 0:
 								game_over = True
 
 							# Computer player move
-							reductions = player.get_reductions(board)
-							print(reductions)
-							row, column = player.get_move(board)
-							board = player.move(board, row, column)
+							move = player.get_move(board)
+							board.update(move)
 
 							if row == ROWS - 1 and column == 0:
 								game_over = True
@@ -103,3 +101,8 @@ if __name__ == '__main__':
 
 	pygame.display.quit()
 	pygame.quit()
+
+
+if __name__ == '__main__':
+	chomp = Chomp()
+	chomp.train(100, 3, 3)
