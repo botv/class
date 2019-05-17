@@ -12,7 +12,7 @@ def optimize(board, winner, loser):
 	loser.on_reward(board, -1)
 
 
-def train(epochs, agent1, agent2):
+def train(epochs, agent1, agent2, board_size=3):
 	agents = [{
 		'mdl': agent1,
 		'name': 'Agent 1',
@@ -26,7 +26,7 @@ def train(epochs, agent1, agent2):
 	for epoch in range(epochs):
 		print('-' * 100)
 		print('Epoch: {}'.format(epoch + 1))
-		board = ChompBoard(size=5)
+		board = ChompBoard(size=board_size)
 		game_over = False
 
 		while not game_over:
@@ -61,10 +61,10 @@ def draw_board(screen, board):
 	pygame.display.flip()
 
 
-def human_play(agent):
+def human_play(agent, board_size=3):
 	print('-' * 100)
 	print('Human Play')
-	board = ChompBoard(size=5)
+	board = ChompBoard(size=board_size)
 	pygame.init()
 
 	# Set the HEIGHT and WIDTH of the screen
@@ -144,16 +144,17 @@ def load_states():
 
 
 def main():
+	board_size = 3
 	# agent1 = ChompAgent()
 	# agent2 = ChompAgent()
-	# epochs = 10000
-	# train(epochs, agent1, agent2)
+	# epochs = 100000
+	# train(epochs, agent1, agent2, board_size=board_size)
 	# save_states(agent2)
 
 	agent = ChompAgent()
 	agent.states = load_states()
 	agent.get_serious()
-	human_play(agent)
+	human_play(agent, board_size=board_size)
 
 
 if __name__ == '__main__':
