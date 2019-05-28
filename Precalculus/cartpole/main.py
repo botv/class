@@ -59,7 +59,7 @@ def run(solver='static'):
 
 
 def main():
-    solver = 'static'
+    solver = 'dqn'
     run(solver)
 
 
