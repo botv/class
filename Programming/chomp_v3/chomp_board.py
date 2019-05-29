@@ -2,9 +2,12 @@ import numpy as np
 
 
 class ChompBoard:
-	def __init__(self, size=3):
+	def __init__(self, size=3, board=None):
 		self.size = size
-		self.board = np.full(size, fill_value=size, dtype=int)
+		if board:
+			self.board = board
+		else:
+			self.board = np.full(size, fill_value=size, dtype=int)
 		self.losing_board = '0' * size
 		self.winner = None
 		self.loser = None
@@ -22,7 +25,7 @@ class ChompBoard:
 
 	def update(self, move):
 		new_board = self.get_new_board(move)
-		self.board = new_board
+		self.board = new_board.board
 
 	def get_new_board(self, move):
 		row, column = move
@@ -35,16 +38,13 @@ class ChompBoard:
 				if new_board[c] > new_board[column]:
 					new_board[c] = new_board[column]
 
-		return new_board
+		return ChompBoard(size=self.size, board=new_board)
 
 	def get_possible_moves(self):
 		moves = []
-
 		for column, rows in enumerate(self.board):
-
 			for row in range(rows):
 				move = (self.size - 1 - row, column)
-
 				moves.append(move)
 
 		return moves

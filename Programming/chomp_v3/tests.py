@@ -27,7 +27,7 @@ class Player():
 
 	def get_boards(self):
 		bs = self.boards(self.size)
-		print(bs)
+		print(len(bs))
 		print("GOTTEN " + str(len(bs)) + " BOARDS")
 		n = 0
 		for b in bs:
@@ -82,7 +82,7 @@ class Player():
 
 
 def main():
-	player = Player(2)
+	player = Player(3)
 	player.get_boards()
 	print(player.win)
 	print(player.lose)

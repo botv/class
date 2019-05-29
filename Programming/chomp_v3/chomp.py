@@ -1,8 +1,17 @@
+import os
+
+from file_helper import FileHelper
+os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = 'hide'
 import pygame
 
 from chomp_player import ChompPlayer
 from chomp_board import ChompBoard
 from constants import *
+
+
+def print_title():
+	with open('./misc/title.txt', 'r') as fin:
+		print(fin.read())
 
 
 def draw_board(screen, board):
@@ -45,8 +54,8 @@ def play(player, board_size=3):
 	# Used to manage how fast the screen updates
 	clock = pygame.time.Clock()
 
-	# Limit to 60 frames per second
-	clock.tick(60)
+	# Limit to 20 frames per second
+	clock.tick(20)
 
 	# Set the screen background
 	screen.fill(BLACK)
@@ -54,12 +63,17 @@ def play(player, board_size=3):
 	# Draw the screen
 	draw_board(screen, board)
 
-	while not game_over:
+	while True:
+		if game_over:
+			game_over = False
+			board.reset()
+			draw_board(screen, board)
+
 		user_clicked = False
+
 		while not user_clicked:
 			for event in pygame.event.get():
 				if event.type == pygame.MOUSEBUTTONDOWN:
-					# Human player move
 					pos = pygame.mouse.get_pos()
 					col = pos[0] // (WIDTH + MARGIN)
 					row = pos[1] // (HEIGHT + MARGIN)
@@ -79,8 +93,7 @@ def play(player, board_size=3):
 								break
 
 							# Computer move
-							move = player.get_move(board.board)
-							print(move)
+							move = player.get_move(board)
 							board.update(move)
 							draw_board(screen, board)
 
@@ -92,15 +105,17 @@ def play(player, board_size=3):
 					except IndexError:
 						pass
 
-	pygame.display.quit()
-	pygame.quit()
-
 
 def main():
-	board_size = 2
+	print_title()
+
+	board_size = 3
 
 	player = ChompPlayer(board_size=board_size)
-	player.get_boards()
+	player.load_boards()
+
+	FileHelper.save('./boards/{}x{}_winning_boards.txt'.format(board_size, board_size), player.winning_boards)
+	FileHelper.save('./boards/{}x{}_losing_boards.txt'.format(board_size, board_size), player.losing_boards)
 
 	play(player, board_size=board_size)
 
