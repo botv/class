@@ -1,11 +1,12 @@
 import os
 
-from file_helper import FileHelper
 os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = 'hide'
 import pygame
+import argparse
 
 from chomp_player import ChompPlayer
 from chomp_board import ChompBoard
+from file_helper import FileHelper
 from constants import *
 
 
@@ -106,10 +107,15 @@ def play(player, board_size=3):
 						pass
 
 
+def args():
+	parser = argparse.ArgumentParser(description='Play Chomp against a computer.')
+	parser.add_argument('--board-size', '-s', type=int, default=3, help='size of the chomp board')
+	return parser.parse_args()
+
+
 def main():
 	print_title()
-
-	board_size = 3
+	board_size = args().board_size
 
 	player = ChompPlayer(board_size=board_size)
 	player.load_boards()
